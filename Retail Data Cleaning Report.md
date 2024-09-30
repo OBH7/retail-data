@@ -1,0 +1,84 @@
+Report: Data Cleaning and Transformation of the Online Retail Dataset
+1. Introduction
+This report outlines the data cleaning and transformation process for a dataset containing transactional data from an online retail company based in the UK. The company mainly sells unique, all-occasion gifts, and the dataset covers transactions made between December 1, 2010 and December 9, 2011. The goal of this project is to prepare the dataset for analysis by handling missing values, removing duplicates, and addressing invalid data entries. Additionally, we create new features to enhance the dataset for further analysis.
+
+2. Dataset Overview
+The dataset consists of the following columns:
+
+InvoiceNo: Invoice number for each transaction.
+StockCode: Product identifier.
+Description: Description of the product.
+Quantity: Number of units of the product purchased.
+InvoiceDate: Date and time of the transaction.
+UnitPrice: Price of one unit of the product.
+CustomerID: Unique identifier for each customer (some missing).
+Country: The country where the customer is located.
+The dataset includes both retail customers and wholesalers, and the majority of transactions occur in the United Kingdom.
+
+3. Data Cleaning Process
+The dataset contains several issues that need to be addressed before it can be used for analysis. The following steps were taken to clean the dataset:
+
+3.1. Handling Missing Values
+CustomerID: A significant number of rows (135,080 out of 541,909) were missing CustomerID. Rather than dropping these rows, we filled the missing CustomerID values with -1 to indicate that these transactions were made by anonymous or unregistered customers.
+
+Description: 1,454 rows were missing Description values. These were filled with the placeholder text "No Description Available".
+
+3.2. Removing Duplicates
+We identified and removed 5,268 duplicate rows from the dataset. Duplicates may arise from multiple entries of the same transaction or errors in data entry. Removing duplicates ensures that the data is not skewed by repeated transactions.
+3.3. Handling Invalid Data
+Negative or Zero Quantity: The dataset contained 10,624 rows where Quantity was less than or equal to 0. These rows likely represent product returns, cancellations, or data entry errors. These rows were removed to ensure that only valid sales data is included.
+
+Negative or Zero UnitPrice: Similarly, 2,517 rows had UnitPrice values less than or equal to 0. Since negative or zero prices are not valid for sales transactions, these rows were also removed.
+
+3.4. Converting Data Types
+The InvoiceDate column was stored as a string and was converted to a datetime object. This conversion allows for easier manipulation of date-based data, such as extracting the day, month, or year, and performing time-series analysis in future analyses.
+4. Data Transformation
+After the data cleaning process, a few additional transformations were applied to make the dataset more useful for analysis:
+
+4.1. Creating a TotalPrice Column
+A new column, TotalPrice, was created to calculate the total value of each transaction. This is computed as:
+TotalPrice
+=
+Quantity
+×
+UnitPrice
+TotalPrice=Quantity×UnitPrice
+This new feature allows for easy aggregation of sales data across customers, products, and time periods.
+4.2. Saving the Cleaned Dataset
+After cleaning and transforming the data, the resulting dataset, now free of duplicates, missing values, and invalid entries, was saved as cleaned_online_retail.csv. This cleaned dataset contains 392,692 rows and 9 columns.
+5. Key Insights from the Cleaning Process
+Missing Customer Information: A large number of transactions are missing CustomerID, implying that either a significant portion of transactions were made by anonymous customers, or customer registration was optional. This may influence future customer segmentation analyses.
+
+Product Returns and Cancellations: The negative Quantity values suggest the presence of product returns or canceled orders. In future analysis, these could be treated separately to analyze return rates or customer dissatisfaction.
+
+Data Quality: The dataset, while containing useful transactional data, requires significant cleaning to handle missing values, duplicates, and invalid entries. Future users of this dataset must be aware of the limitations caused by missing data.
+
+6. Conclusion
+The data cleaning and transformation steps outlined in this report resulted in a cleaned, ready-to-use dataset. The cleaned dataset has removed invalid and incomplete data, making it suitable for further analysis, such as customer segmentation, sales trends analysis, and predictive modeling.
+
+Future Steps:
+Sales Analysis: Analyze the total sales over time and across different products and customers.
+Customer Segmentation: Cluster customers based on their purchasing patterns to identify valuable segments.
+Product Analysis: Evaluate which products are most frequently sold and the revenue generated by each.
+Time Series Analysis: Examine sales patterns over time, particularly looking for seasonal trends.
+The cleaned dataset is a strong foundation for further analyses, helping the company gain insights into customer behavior and improve sales strategies.
+
+Appendix: Example Code Snippets
+Here are a few key code snippets used during the cleaning process:
+
+Removing Invalid Data:
+
+```python
+# Remove rows where Quantity or UnitPrice is less than or equal to 0
+data = data[(data['Quantity'] > 0) & (data['UnitPrice'] > 0)]
+```
+Creating the TotalPrice Column:
+```python
+# Calculate TotalPrice for each transaction
+data['TotalPrice'] = data['Quantity'] * data['UnitPrice']
+```
+
+Dataset downloaded from http://archive.ics.uci.edu/ml/datasets/Online+Retail
+
+
+
